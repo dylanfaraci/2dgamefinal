@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang = "en">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fruit Shooter</title>
-<script src=""game.js"></script>
-<stlye>
-    cavas {
-        border: 3px solid #060606;
-        margin: 20px auto;
-        display: block;
-    }
-</stlye>
-</html>
+<html>
+<head>
+    <title>Fruit Shooter</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 3px solid black;
+            background-image: url(https://www.pinterest.com/pin/seamless-wood-planks-d647-by-agf81-on-deviantart--285345326378727840/);
+        }
+    </style>
+</head>
+<body>
+<canvas id="Fruit" width="800" height="500"></canvas>
+<script>
+    const canvas = document.getElementById("Fruit");
+    const ctx = canvas.getContext("2d");
+</script>
