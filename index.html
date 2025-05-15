@@ -1,19 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <script src="/game.js"></script>
-    <title>Fruit Shooter</title>
-    <style>
-        canvas {
-            display: block;
+   
+  <meta charset="UTF-8">
+  <title>Fruit Shooter</title>
+  <text>Click To Shoot The Fruit!</text>
+  <style>
+    canvas {
+      display: block;
             margin: 20px auto;
             border: 5px solid black;
             background-image: url('https://i.pinimg.com/236x/8d/79/7e/8d797e08946b5ee317d63a3f9db543ee.jpg');
-        }
-    </style>
+      cursor: crosshair;
+    }
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #222;
+      color: white;
+    }
+    #score {
+      font-size: 24px;
+    }
+    #gameOver {
+      display: none;
+      font-size: 48px;
+      color: red;
+      margin: 10px;
+    }
+    #restartBtn {
+      display: none;
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #restartBtn:hover {
+      background-color: #666;
+    }
+  </style>
 </head>
-<canvas id="Fruit" width="900" height="600"></canvas>
-<script>
-    const canvas = document.getElementById("Fruit");
-    const ctx = canvas.getContext("2d");
-</script>
+<body>
+  <h1>Fruit Shooter</h1>
+  <canvas id="gameCanvas" width="1000" height="500"></canvas>
+  <p id="score">Score: 0</p>
+  <p id="gameOver">💥 Game Over!</p>
+  <button id="restartBtn">Restart</button>
+<script src="game.js"></script> 
+</body>
+
+</html>
