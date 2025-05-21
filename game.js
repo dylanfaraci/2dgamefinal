@@ -1,5 +1,3 @@
-
-
 const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const scoreDisplay = document.getElementById('score');
@@ -15,9 +13,32 @@ const canvas = document.getElementById('gameCanvas');
     let difficultyTimer = 0;
     let gameOver = false;
 
+   
+    const fruitImages = {
+      apple: 'https://cdn-icons-png.flaticon.com/512/415/415682.png',
+      banana: 'https://cdn-icons-png.flaticon.com/512/1514/1514933.png',
+      orange: 'https://cdn-icons-png.flaticon.com/512/1728/1728765.png',
+      bomb: 'https://cdn-icons-png.flaticon.com/512/394/394532.png'
+    };
+
+    const images = {};
+    const fruitTypes = ['apple', 'banana', 'orange', 'bomb'];
+
+    function preloadImages(callback) {
+      let loaded = 0;
+      fruitTypes.forEach(type => {
+        const img = new Image();
+        img.src = fruitImages[type];
+        img.onload = () => {
+          images[type] = img;
+          if (++loaded === fruitTypes.length) callback();
+        };
+      });
+    }
+
     class Fruit {
-      constructor(type = 'fruit') {
-        this.radius = 30;
+      constructor(type) {
+        this.radius = 35;
         this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
         this.y = canvas.height + this.radius;
         this.vx = (Math.random() - 0.5) * 2 * difficulty;
@@ -25,12 +46,7 @@ const canvas = document.getElementById('gameCanvas');
         this.gravity = 0.15 * difficulty;
         this.clicked = false;
         this.type = type;
-
-        if (type === 'bomb') {
-          this.color = 'black';
-        } else {
-          this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
-        }
+        this.image = images[this.type];
       }
 
       update() {
@@ -40,17 +56,8 @@ const canvas = document.getElementById('gameCanvas');
       }
 
       draw(ctx) {
-        if (!this.clicked) {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-          if (this.type === 'bomb') {
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = 'red';
-            ctx.stroke();
-          }
-          ctx.closePath();
+        if (!this.clicked && this.image) {
+          ctx.drawImage(this.image, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
         }
       }
 
@@ -89,7 +96,13 @@ const canvas = document.getElementById('gameCanvas');
 
     function spawnFruit() {
       const isBomb = Math.random() < 0.1;
-      fruits.push(new Fruit(isBomb ? 'bomb' : 'fruit'));
+      if (isBomb) {
+        fruits.push(new Fruit('bomb'));
+      } else {
+        const options = ['apple', 'banana', 'orange'];
+        const type = options[Math.floor(Math.random() * options.length)];
+        fruits.push(new Fruit(type));
+      }
     }
 
     function createClickEffect(x, y, color) {
@@ -115,7 +128,6 @@ const canvas = document.getElementById('gameCanvas');
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      
       for (let i = fruits.length - 1; i >= 0; i--) {
         const fruit = fruits[i];
         fruit.update();
@@ -125,7 +137,6 @@ const canvas = document.getElementById('gameCanvas');
         }
       }
 
-     
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.update();
@@ -146,7 +157,7 @@ const canvas = document.getElementById('gameCanvas');
       for (let fruit of fruits) {
         if (fruit.isClicked(mouseX, mouseY) && !fruit.clicked) {
           fruit.clicked = true;
-          createClickEffect(fruit.x, fruit.y, fruit.color);
+          createClickEffect(fruit.x, fruit.y, '#fff'); // white splash
 
           if (fruit.type === 'bomb') {
             endGame();
@@ -182,8 +193,7 @@ const canvas = document.getElementById('gameCanvas');
 
     restartBtn.addEventListener('click', restartGame);
 
-    updateGame();
     
-
-
-
+    preloadImages(() => {
+      updateGame();
+    });
